@@ -1,0 +1,4 @@
+[
+    {"path":"/", "roles":[{"role": "*", "methods":["GET"]} ]},
+    {"path":"/rest/products*", "roles":[ {"role": "*", "methods":["GET"]} ]}
+]
