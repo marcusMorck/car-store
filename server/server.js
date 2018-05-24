@@ -18,6 +18,10 @@ const accessManager = new AccessManager({
 // Models
 const User = accessManager.models.user;
 
+
+app.get('/', (req,res)=>{
+
+});
 // REST routes
 app.get('/rest/products', async(req, res)=>{
     //res.send('We are products');
