@@ -1,5 +1,9 @@
 // Page components
 Vue.component('home-page', HomePageComponent);
+Vue.component('product-page', ProductPageComponent);
+Vue.component('cart-page', CartPageComponent);
+Vue.component('login-page', LoginPageComponent);
+Vue.component('registration-page', RegistrationPageComponent);
 
 //normal components
 Vue.component('hello', HelloComponent);
@@ -16,7 +20,10 @@ const router = new VueRouter({
   base: '/', // set the correct base
   routes: [ // our frontend routes
     { path: '/', component: HomePageComponent },
-    
+    { path: '/products', component: ProductPageComponent },
+    { path: '/cart', component: CartPageComponent },
+    { path: '/login', component: LoginPageComponent },
+    { path: '/registration', component: RegistrationPageComponent }
   ]
 });
 // the app

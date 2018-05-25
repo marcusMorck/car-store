@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
+const stripe = require('stripe')('sk_test_LMFKKC9Y6u78GBOYoVuYU4xP');
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -54,6 +55,37 @@ app.use(CartMiddleware);
 // REST routes (backend routes)
 
 // Products CRUD paths
+app.post('/rest/pay', async(req, res)=>{
+  const userEmail = req.session.user.email;
+  let paymentSum = 0;
+
+  const cart = await Cart.findOnde({_id: req.session.cart}).populate('items.product');
+
+  for(let item of cart.items){
+    const price = item.product.price * item.amount;
+
+    paymentSum += price;
+  }
+
+
+  const customer = await stripe.customers.create(
+      { email: userEmail }
+    ).catch(e=>console.error);
+
+  const source = await stripe.customers.createSource(customer.id, {
+      source: 'tok_visa'
+    }).catch(e=>console.error);
+
+  const charge = await stripe.charges.create({
+      amount: paymentSum * 100,
+      currency: 'sek',
+      customer: source.customer
+    }).catch(e=>console.error);
+
+    res.json(charge);
+    
+});
+
 
 app.get('/rest/products', async(req, res)=>{
   //res.send('We are products');
@@ -181,7 +213,7 @@ app.get('/rest/user', (req, res)=>{
   if(req.user._id){
     response = req.user;
     // never send the password back
-    response.password = '******';
+    //response.password = '******';
   }else{
     response = {message: 'Not logged in'};
   }
@@ -200,5 +232,5 @@ app.get('/rest/super', async(req, res)=>{
 
 // start the express HTTP server
 app.listen('3000', ()=>{
-  console.log('The magazine store server is running on port 3000');
+  console.log('The car store server is running on port 3000');
 });
